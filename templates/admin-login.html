@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="脸客">
+    <link rel="shortcut icon" href="img/favicon.html">
+
+    <title>FlatLab - Flat & Responsive Bootstrap Admin Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/bootstrap-reset.css')}}" rel="stylesheet">
+    <!--external css-->
+    <link href="{{url_for('static',filename='assets/font-awesome/css/font-awesome.css')}}" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/style-responsive.css')}}" rel="stylesheet"/>
+
+    <script src="{{url_for('static',filename='js/jquery.js')}}"></script>
+    <script src="{{url_for('static',filename='js/jquery.cookie.min.js')}}"></script>
+</head>
+
+<body class="login-body">
+
+<div class="container">
+    <form class="form-signin" action="index.html">
+        <h2 class="form-signin-heading">用户登陆</h2>
+        <div class="login-wrap">
+            <input id="username" type="text" class="form-control" placeholder="用户名" autofocus>
+            <input id="password" type="password" class="form-control" placeholder="登录密码">
+            <!--<label class="checkbox">-->
+            <!--<input type="checkbox" value="remember-me"> Remember me-->
+            <!--<span class="pull-right"> <a href="#"> Forgot Password?</a></span>-->
+            <!--</label>-->
+            <button id="submit" class="btn btn-lg btn-login btn-block" type="submit">登陆</button>
+        </div>
+    </form>
+    <script>
+        (function(){
+            $('#submit').on('click', function (e) {
+                e.preventDefault();
+                var username = $('#username').val();
+                var password = $('#password').val();
+                $.ajax({
+                    url:"/login",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'username':username,
+                        'password':password
+                    },
+                    success: function(res){
+                        if (!res) {
+                            alert("账号未注册");
+
+                        } else if (res =='-1') {
+                            alert('密码错误');
+                        } else {
+                            $.cookie('username', username, { expires: 7 });
+                            $.cookie('id', res, { expires: 7 });
+                            window.location.href = '/';
+                        }
+                    }
+                });
+            });
+        })()
+    </script>
+</div>
+</body>
+</html>
