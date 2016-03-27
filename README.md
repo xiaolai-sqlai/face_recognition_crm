@@ -1,0 +1,2 @@
+# face_recognition_crm
+一个用人脸识别来代替会员卡的CRM管理系统，前端用bootstrap，后端用flask，识别部分是python+opencv
