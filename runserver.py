@@ -191,6 +191,16 @@ def search():
         return render_template('admin-search.html')
 
 
+@app.route('/consume', methods=['GET', 'POST'])
+def consume():
+    if (request.method == 'GET'):
+        username = request.cookies.get('username')
+        session = DBSession()
+        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        session.close()
+        return render_template('admin-consume.html')
+
+
 @app.route('/config', methods=['GET', 'POST'])
 def config():
     username = request.cookies.get('username')

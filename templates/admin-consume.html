@@ -44,7 +44,7 @@
 <aside>
     <div id="sidebar" class="nav-collapse ">
         <ul class="sidebar-menu">
-            <li class="sub-menu">
+            <li class="active">
                 <a class="" href="{{url_for('add')}}">
                     <i class="icon-dashboard"></i>
                     <span>添加会员</span>
@@ -56,7 +56,7 @@
                     <span>添加商品</span>
                 </a>
             </li>
-            <li class="active">
+            <li class="sub-menu">
                 <a class="" href="{{url_for('search')}}">
                     <i class="icon-dashboard"></i>
                     <span>会员查找</span>
@@ -94,14 +94,36 @@
         <div class="col-lg-10">
             <section class="panel">
                 <header class="panel-heading">
-                    会员查找
+                    会员消费
                 </header>
                 <div class="panel-body">
                     <form role="form">
                         <div class="form-group">
-                            <video src="{{url_for('static',filename='test.mp4')}}" controls="controls" width=640 height=480></video>
+                            <label>姓名</label>
+                            <h4>小灰灰</h4>
                         </div>
-                        <button id="submit" type="submit" class="btn btn-info">确定</button>
+                        <div class="form-group">
+                            <label>余额</label>
+                            <h4>￥100.00</h4>
+                        </div>
+                        <div class="form-group">
+                            <label>商品列表</label>
+                            <ul class="form-group menu-list" style="overflow: hidden;">
+                                <li><p class="col-lg-10">原味奶茶</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                                <li><p class="col-lg-10">橘子奶茶</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                                <li><p class="col-lg-10">草莓奶茶</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                                <li><p class="col-lg-10">蓝莓奶茶</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                                <li><p class="col-lg-10">木瓜奶昔</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                                <li><p class="col-lg-10">可乐漂浮</p><input class="col-lg-1 number" type="text" value="0"><div class="col-lg-1">￥<span>10.0</span></div></li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label>总消费金额</label>
+                            <h4>￥<span id="sum-price">0</span></h4>
+                        </div>
+                        <div class="form-group">
+                            <button id="submit" type="submit" class="btn btn-info">完成</button>
+                        </div>
                     </form>
                 </div>
             </section>
@@ -125,10 +147,20 @@
 
 <script>
     (function(){
-        $('#submit').on('click', function (e) {
+        $('.number').on('blur', function(){
+            var list = $('.number');
+            var sum = 0;
+            var sumprice = $('#sum-price');
+            for(var i = 0;i<list.length;i++) {
+                sum = sum + parseInt(list.eq(i).val()) * list.eq(i).next().find('span').text() ;
+            }
+            sumprice.text(sum);
+        })
+
+        $('#submit').on('click', function(e){
             e.preventDefault();
-            window.location.href = '/consume';
-        });
+            window.location.href = '/';
+        })
     })()
     //owl carousel
 
