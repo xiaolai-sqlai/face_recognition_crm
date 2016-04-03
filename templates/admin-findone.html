@@ -79,7 +79,7 @@
 </aside>
 <section id="main-content">
     <section class="wrapper">
-        <div class="col-lg-10">
+        <div class="col-lg-9">
             <section class="panel">
                 <div class="panel-body progress-panel">
                     <div class="task-progress">
@@ -90,13 +90,12 @@
                     <tbody>
                     <tr>
                         <th class="col-lg-1">序号</th>
-                        <th class="col-lg-1">姓名</th>
+                        <th class="col-lg-2">姓名</th>
                         <th class="col-lg-2">联系方式</th>
                         <th class="col-lg-1">当前积分</th>
                         <th class="col-lg-2">卡内余额</th>
-                        <th class="col-lg-5">操作</th>
+                        <th class="col-lg-4">操作</th>
                     </tr>
-                    {% for member in members %}
                     <tr>
                         <td>{{member.id}}</td>
                         <td>{{member.name}}</td>
@@ -111,7 +110,6 @@
                             <a class="btn btn-round btn-danger">删除会员</a>
                         </td>
                     </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
             </section>

@@ -44,7 +44,7 @@
 <aside>
     <div id="sidebar" class="nav-collapse ">
         <ul class="sidebar-menu">
-            <li class="sub-menu active">
+            <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-cogs"></i>
                     <span>会员管理</span>
@@ -54,10 +54,10 @@
                     <li><a class="" href="{{url_for('add')}}">添加会员</a></li>
                     <li><a class="" href="{{url_for('recognize')}}">会员识别</a></li>
                     <li><a class="" href="{{url_for('search')}}">会员查找</a></li>
-                    <li class="active"><a class="" href="{{url_for('index')}}">会员名单</a></li>
+                    <li><a class="" href="{{url_for('index')}}">会员名单</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
+            <li class="sub-menu active">
                 <a href="javascript:;" class="">
                     <i class="icon-cogs"></i>
                     <span>商品管理</span>
@@ -65,7 +65,7 @@
                 </a>
                 <ul class="sub">
                     <li><a class="" href="{{url_for('addproject')}}">添加商品</a></li>
-                    <li><a class="" href="{{url_for('list')}}">商品列表</a></li>
+                    <li class="active"><a class="" href="{{url_for('list')}}">商品列表</a></li>
                 </ul>
             </li>
             <li class="sub-menu">
@@ -79,36 +79,27 @@
 </aside>
 <section id="main-content">
     <section class="wrapper">
-        <div class="col-lg-10">
+        <div class="col-lg-8">
             <section class="panel">
                 <div class="panel-body progress-panel">
                     <div class="task-progress">
-                        <h1>会员名单</h1>
+                        <h1>商品名单</h1>
                     </div>
                 </div>
                 <table class="table table-striped table-advance table-hover personal-task">
                     <tbody>
                     <tr>
-                        <th class="col-lg-1">序号</th>
-                        <th class="col-lg-1">姓名</th>
-                        <th class="col-lg-2">联系方式</th>
-                        <th class="col-lg-1">当前积分</th>
-                        <th class="col-lg-2">卡内余额</th>
+                        <th class="col-lg-1">名称</th>
+                        <th class="col-lg-2">价格</th>
                         <th class="col-lg-5">操作</th>
                     </tr>
-                    {% for member in members %}
+                    {% for list in lists %}
                     <tr>
-                        <td>{{member.id}}</td>
-                        <td>{{member.name}}</td>
-                        <td>{{member.phone}}</td>
-                        <td>{{member.credit}}</td>
-                        <td>￥{{member.balance}}</td>
+                        <td>{{list.name}}</td>
+                        <td>{{list.price}}</td>
                         <td>
-                            <a id="recharge-btn" href="/recharge/{{member.id}}"
-                               class="btn btn-round btn-primary">现金充值</a>
-                            <a href="/consume/{{member.id}}" class="btn btn-round btn-info">开始消费</a>
-                            <a href="/history/{{member.id}}" class="btn btn-round btn-success">消费记录</a>
-                            <a class="btn btn-round btn-danger">删除会员</a>
+                            <a id="recharge-btn" class="btn btn-round btn-primary" href="/alterProduct/{{list.id}}">更改价格</a>
+                            <a class="btn btn-round btn-danger">删除商品</a>
                         </td>
                     </tr>
                     {% endfor %}

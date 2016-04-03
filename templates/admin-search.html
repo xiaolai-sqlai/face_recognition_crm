@@ -44,29 +44,29 @@
 <aside>
     <div id="sidebar" class="nav-collapse ">
         <ul class="sidebar-menu">
-            <li class="sub-menu">
-                <a class="" href="{{url_for('add')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>添加会员</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a class="" href="{{url_for('addproject')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>添加商品</span>
-                </a>
-            </li>
-            <li class="active">
-                <a class="" href="{{url_for('search')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>会员查找</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a class="" href="{{url_for('index')}}">
-                    <i class="icon-dashboard"></i>
+            <li class="sub-menu active">
+                <a href="javascript:;" class="">
+                    <i class="icon-cogs"></i>
                     <span>会员管理</span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub">
+                    <li><a class="" href="{{url_for('add')}}">添加会员</a></li>
+                    <li><a class="" href="{{url_for('recognize')}}">会员识别</a></li>
+                    <li class="active"><a class="" href="{{url_for('search')}}">会员查找</a></li>
+                    <li><a class="" href="{{url_for('index')}}">会员名单</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-cogs"></i>
+                    <span>商品管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class="" href="{{url_for('addproject')}}">添加商品</a></li>
+                    <li><a class="" href="{{url_for('list')}}">商品列表</a></li>
+                </ul>
             </li>
             <li class="sub-menu">
                 <a class="" href="{{url_for('config')}}">
@@ -74,34 +74,23 @@
                     <span>系统管理</span>
                 </a>
             </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-cogs"></i>
-                    <span>Components</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="grids.html">Grids</a></li>
-                    <li><a class="" href="calendar.html">Calendar</a></li>
-                    <li><a class="" href="charts.html">Charts</a></li>
-                </ul>
-            </li>
         </ul>
     </div>
 </aside>
 <section id="main-content">
     <section class="wrapper">
-        <div class="col-lg-10">
+        <div class="col-lg-8">
             <section class="panel">
                 <header class="panel-heading">
-                    会员查找
+                    添加会员
                 </header>
                 <div class="panel-body">
-                    <form role="form">
+                    <form class="col-md-6" role="form" action="/search" method="POST">
                         <div class="form-group">
-                            <video src="{{url_for('static',filename='test.mp4')}}" controls="controls" width=640 height=480></video>
+                            <label>手机号</label>
+                            <input type="text" name="phone" class="form-control" placeholder="输入手机号">
                         </div>
-                        <button id="submit" type="submit" class="btn btn-info">确定</button>
+                        <button id="submit" type="submit" class="btn btn-info">查找</button>
                     </form>
                 </div>
             </section>
@@ -124,12 +113,6 @@
 <script src="{{url_for('static',filename='js/easy-pie-chart.js')}}"></script>
 
 <script>
-    (function(){
-        $('#submit').on('click', function (e) {
-            e.preventDefault();
-            window.location.href = '/consume';
-        });
-    })()
     //owl carousel
 
     $(document).ready(function () {

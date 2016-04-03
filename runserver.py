@@ -1,10 +1,11 @@
 # encoding: utf-8
 from flask import Flask, render_template, url_for, request, make_response, json, redirect
 from sqlalchemy import create_engine, Column, desc, func
-from sqlalchemy.types import String, Float, Integer
+from sqlalchemy.types import String, Float, Integer, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import sys
+import datetime
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -73,10 +74,14 @@ class History(Base):
     id = Column(Integer, primary_key=True)
     content = Column(String(255))
     member = Column(String(10))
+    date = Column(Date)
+    sum = Column(Float)
 
-    def __init__(self, content, member):
+    def __init__(self, content, member, date, sum):
         self.content = content
         self.member = member
+        self.date = date
+        self.sum = sum
 
     def __repr__(self):
         return "%d" % self.id
@@ -89,17 +94,6 @@ DBSession = sessionmaker(bind=engine)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
-    username = request.cookies.get('username')
-    id = request.cookies.get('id')
-    session = DBSession()
-    currentName = session.query(Shop).filter(Shop.username == username).first().name
-    members = session.query(Member).filter(Member.shop == id).all()
-    session.close()
-    return render_template('admin-index.html', name=currentName, members=members)
-
-
-@app.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'GET'):
         return render_template('admin-login.html')
@@ -115,6 +109,17 @@ def login():
             return "-1"
         else:
             return str(current.id)
+
+
+@app.route('/member', methods=['GET', 'POST'])
+def index():
+    username = request.cookies.get('username')
+    id = request.cookies.get('id')
+    session = DBSession()
+    currentName = session.query(Shop).filter(Shop.username == username).first().name
+    members = session.query(Member).filter(Member.shop == id).all()
+    session.close()
+    return render_template('admin-index.html', name=currentName, members=members)
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -139,6 +144,60 @@ def add():
         return '1'
 
 
+@app.route('/recognize', methods=['GET', 'POST'])
+def recognize():
+    if (request.method == 'GET'):
+        username = request.cookies.get('username')
+        session = DBSession()
+        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        session.close()
+        return render_template('admin-recognize.html', name=currentName)
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    username = request.cookies.get('username')
+    if (request.method == 'GET'):
+        session = DBSession()
+        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        session.close()
+        return render_template('admin-search.html', name=currentName)
+    else:
+        phone = request.form.get('phone')
+        session = DBSession()
+        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        print phone
+        member = session.query(Member).filter(Member.phone == phone).one()
+        session.close()
+        return render_template('admin-findone.html', name=currentName, member=member)
+
+
+@app.route('/consume/<id>', methods=['GET', 'POST'])
+def consume(id):
+    if (request.method == 'GET'):
+        username = request.cookies.get('username')
+        session = DBSession()
+        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        shopId = session.query(Shop).filter(Shop.username == username).one().id
+        member = session.query(Member).filter(Member.id == id).one()
+        lists = session.query(Product).filter(Product.shop == shopId).all()
+        session.close()
+        return render_template('admin-consume.html', name=currentName, member=member, lists=lists)
+
+
+@app.route('/content', methods=['GET', 'POST'])
+def content():
+    member = request.form.get('member')
+    content = request.form.get('content')
+    sum = request.form.get('sum')
+    session = DBSession()
+    new_history = History(content=content, member=member, date=datetime.date.today(), sum=sum)
+    session.add(new_history)
+    session.commit()
+    session.close()
+    return '1'
+
+
 @app.route('/recharge/<id>', methods=['GET', 'POST'])
 def recharge(id):
     if (request.method == 'GET'):
@@ -158,6 +217,17 @@ def recharge(id):
         session.commit()
         session.close()
         return '1'
+
+
+@app.route('/history/<id>', methods=['GET'])
+def history(id):
+    username = request.cookies.get('username')
+    session = DBSession()
+    currentName = session.query(Shop).filter(Shop.username == username).first().name
+    histories = session.query(History).filter(History.member == id).all()
+    memberName = session.query(Member).filter(Member.id == id).first().name
+    session.close()
+    return render_template('admin-history.html', name=currentName, memberName=memberName, histories=histories)
 
 
 @app.route('/addproject', methods=['GET', 'POST'])
@@ -181,24 +251,35 @@ def addproject():
         return '1'
 
 
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    if (request.method == 'GET'):
+@app.route('/list', methods=['GET', 'POST'])
+def list():
+    username = request.cookies.get('username')
+    id = request.cookies.get('id')
+    session = DBSession()
+    currentName = session.query(Shop).filter(Shop.username == username).first().name
+    lists = session.query(Product).filter(Product.shop == id).all()
+    session.close()
+    return render_template('admin-list.html', name=currentName, lists=lists)
+
+
+@app.route('/alterProduct/<id>', methods=['GET', 'POST'])
+def alterProduct(id):
+    if(request.method == 'GET'):
         username = request.cookies.get('username')
         session = DBSession()
         currentName = session.query(Shop).filter(Shop.username == username).first().name
+        productName = session.query(Product).filter(Product.id == id).first().name
         session.close()
-        return render_template('admin-search.html')
-
-
-@app.route('/consume', methods=['GET', 'POST'])
-def consume():
-    if (request.method == 'GET'):
-        username = request.cookies.get('username')
+        return render_template('admin-alterproject.html', name=currentName, productName=productName, id=id)
+    else:
+        price = request.form.get('price')
         session = DBSession()
-        currentName = session.query(Shop).filter(Shop.username == username).first().name
+        alter_product = session.query(Product).filter(Product.id == id).first()
+        alter_product.price = float(price)
+        session.add(alter_product)
+        session.commit()
         session.close()
-        return render_template('admin-consume.html')
+        return '1'
 
 
 @app.route('/config', methods=['GET', 'POST'])
@@ -208,77 +289,6 @@ def config():
     currentName = session.query(Shop).filter(Shop.username == username).first().name
     session.close()
     return render_template('admin-config.html', name=currentName)
-    # @app.route('/', methods=['GET'])
-    # def index():
-    #     userphone = request.cookies.get('userphone')
-    #     session = DBSession()
-    #     flag = 1
-    #     currentname = session.query(GuestList).first().name
-    #     current = session.query(GuestList).filter(GuestList.phone == userphone).first()
-    #     count = session.query(GuestList).count()
-    #     if userphone and current:
-    #         flag = 0
-    #         currentid = int(current.id)
-    #         count = session.query(GuestList).filter(GuestList.id <= currentid).count()
-    #         session.close()
-    #     return render_template('subscribe.html', flag=flag, count=count, name=currentname)
-    #
-    #
-    # @app.route('/subscribe', methods=['GET'])
-    # def subscribe():
-    #     if request.method == 'GET':
-    #         session = DBSession()
-    #         guests = session.query(GuestList).filter(GuestList.department == 1).all()
-    #         ress = []
-    #         for guest in guests:
-    #             res = {
-    #                 'name': guest.name,
-    #                 'phone': guest.phone,
-    #                 'department': str(guest.department)
-    #             }
-    #             ress.append(res)
-    #         return json.dumps(ress)
-    #
-    #
-    # @app.route('/information', methods=['GET', 'POST'])
-    # def information():
-    #     if request.method == 'GET':
-    #         return render_template('information.html')
-    #     else:
-    #         name = request.form.get('name')
-    #         phone = request.form.get('phone')
-    #         session = DBSession()
-    #         new_guest = GuestList(name=name, phone=phone, department='1')
-    #         session.add(new_guest)
-    #         session.commit()
-    #         session.close()
-    #         return '1'
-    #
-    #
-    # @app.route('/admin', methods=['GET', 'POST'])
-    # def admin():
-    #     if request.method == "GET":
-    #         session = DBSession()
-    #         lists = session.query(GuestList).all()
-    #         currentPerson = session.query(GuestList).first()
-    #         persons = []
-    #         for list in lists:
-    #             person = {
-    #                 'name': list.name,
-    #                 'phone': list.phone,
-    #             }
-    #             persons.append(person)
-    #         print persons
-    #         return render_template('admin.html', persons=persons, currentPerson=currentPerson)
-    #     else:
-    #         phone = request.form.get('phone')
-    #         session = DBSession()
-    #         print phone
-    #         query = session.query(GuestList).filter(GuestList.phone == phone).first()
-    #         session.delete(query)
-    #         session.commit()
-    #         session.close()
-    #         return '1'
 
 
 if __name__ == '__main__':

@@ -45,7 +45,7 @@
                 var username = $('#username').val();
                 var password = $('#password').val();
                 $.ajax({
-                    url:"/login",
+                    url:"/",
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -61,7 +61,7 @@
                         } else {
                             $.cookie('username', username, { expires: 7 });
                             $.cookie('id', res, { expires: 7 });
-                            window.location.href = '/';
+                            window.location.href = '/member';
                         }
                     }
                 });

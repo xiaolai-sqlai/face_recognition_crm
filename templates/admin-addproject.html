@@ -45,46 +45,34 @@
     <div id="sidebar" class="nav-collapse ">
         <ul class="sidebar-menu">
             <li class="sub-menu">
-                <a class="" href="{{url_for('add')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>添加会员</span>
-                </a>
-            </li>
-            <li class="active">
-                <a class="" href="{{url_for('addproject')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>添加商品</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a class="" href="{{url_for('search')}}">
-                    <i class="icon-dashboard"></i>
-                    <span>会员查找</span>
-                </a>
-            </li>
-            <li class="sub-menu">
-                <a class="" href="{{url_for('index')}}">
-                    <i class="icon-dashboard"></i>
+                <a href="javascript:;" class="">
+                    <i class="icon-cogs"></i>
                     <span>会员管理</span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub">
+                    <li><a class="" href="{{url_for('add')}}">添加会员</a></li>
+                    <li><a class="" href="{{url_for('recognize')}}">会员识别</a></li>
+                    <li><a class="" href="{{url_for('search')}}">会员查找</a></li>
+                    <li><a class="" href="{{url_for('index')}}">会员名单</a></li>
+                </ul>
+            </li>
+            <li class="sub-menu active">
+                <a href="javascript:;" class="">
+                    <i class="icon-cogs"></i>
+                    <span>商品管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li class="active"><a class="" href="{{url_for('addproject')}}">添加商品</a></li>
+                    <li><a class="" href="{{url_for('list')}}">商品列表</a></li>
+                </ul>
             </li>
             <li class="sub-menu">
                 <a class="" href="{{url_for('config')}}">
                     <i class="icon-dashboard"></i>
                     <span>系统管理</span>
                 </a>
-            </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-cogs"></i>
-                    <span>Components</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="grids.html">Grids</a></li>
-                    <li><a class="" href="calendar.html">Calendar</a></li>
-                    <li><a class="" href="charts.html">Charts</a></li>
-                </ul>
             </li>
         </ul>
     </div>
@@ -145,7 +133,7 @@
                 success: function(res){
                     if(res) {
                         alert('添加成功');
-                        window.location.href = '/';
+                        window.location.href = '/list';
                     }
                 }
             });
